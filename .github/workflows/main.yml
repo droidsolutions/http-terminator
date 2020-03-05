@@ -30,6 +30,11 @@ jobs:
     - run: npm run build
       env:
         CI: true
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: dist
+        path: dist
 
   test:
     name: Coverage
@@ -55,6 +60,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
       - run: npm ci
+      - name: Download dist from build job
+        uses: actions/download-artifact@v1
+        with:
+          name: dist
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
