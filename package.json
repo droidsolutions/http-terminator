@@ -104,6 +104,9 @@
     ],
     "sourceMap": true
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "release": {
     "plugins": [
       "@semantic-release/commit-analyzer",
