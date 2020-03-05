@@ -4,6 +4,8 @@
 
 (Based on [http-terminator](https://github.com/gajus/http-terminator).)
 
+![Main](https://github.com/droidsolutions/http-terminator/workflows/Main/badge.svg)
+
 Gracefully terminates HTTP(S) server. Also includes Typescript support.
 
 - [DroidSolutions http-terminator](#http-terminator)
