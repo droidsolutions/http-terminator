@@ -60,10 +60,11 @@ const httpTerminator = new HttpTerminator(server);
 await httpTerminator.terminate();
 ```
 
-You can specify an optional timeout in milli seconds to wait, before requests are closed forcefully. If you do not specify a timeout, the default of 1000 ms is used.
+You can specify an optional timeout in milliseconds to wait, before requests are closed forcefully. If you do not specify a timeout, the default of 1000 ms is used.
 
 ```ts
-const httpTerminator = new HttpTerminator(server, 2000);
+const httpTerminator = new HttpTerminator(server);
+await httpTerminator.terminate(2000);
 ```
 
 <a name="http-terminator-usage-usage-with-koa"></a>

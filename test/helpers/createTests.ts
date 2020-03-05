@@ -30,13 +30,13 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
       spy();
     });
 
-    const terminator = new HttpTerminator(httpServer.server, 150);
+    const terminator = new HttpTerminator(httpServer.server);
     got(httpServer.url).catch((_) => {});
     await delay(50);
 
     chai.expect(spy.called).to.be.true;
 
-    terminator.terminate();
+    terminator.terminate(150);
 
     await delay(100);
 
@@ -64,13 +64,13 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const httpServer = await createHttpServer(stub);
 
-    const terminator = new HttpTerminator(httpServer.server, 150);
+    const terminator = new HttpTerminator(httpServer.server);
 
     const request0 = got(httpServer.url);
 
     await delay(50);
 
-    terminator.terminate();
+    terminator.terminate(150);
 
     await delay(50);
 
@@ -90,7 +90,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
       }, 100);
     });
 
-    const terminator = new HttpTerminator(httpServer.server, 150);
+    const terminator = new HttpTerminator(httpServer.server);
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1, keepAliveMsecs: 10000 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1, keepAliveMsecs: 10000 });
 
@@ -98,7 +98,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     await delay(50);
 
-    terminator.terminate();
+    terminator.terminate(150);
 
     const response = await request;
 
@@ -127,14 +127,14 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const httpServer = await createHttpServer(stub);
 
-    const terminator = new HttpTerminator(httpServer.server, 150);
+    const terminator = new HttpTerminator(httpServer.server);
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1 });
 
     const request0 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
     await delay(50);
 
-    terminator.terminate();
+    terminator.terminate(150);
 
     const request1 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
 
@@ -160,14 +160,14 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
       }, 50);
     });
 
-    const terminator = new HttpTerminator(httpServer.server, 0);
+    const terminator = new HttpTerminator(httpServer.server);
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1 });
 
     const response = await got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
 
     chai.expect(response.headers.connection).to.equal("keep-alive");
-    await terminator.terminate();
+    await terminator.terminate(0);
   });
 
   it("should clear the internal socket collections", async function() {
@@ -177,7 +177,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
       outgoingMessage.end("foo");
     });
 
-    const terminator = new HttpTerminator(httpServer.server, 150);
+    const terminator = new HttpTerminator(httpServer.server);
 
     await got(httpServer.url);
     await delay(50);
@@ -185,6 +185,6 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(terminator["sockets"].size).to.equal(0);
     chai.expect(terminator["secureSockets"].size).to.equal(0);
 
-    await terminator.terminate();
+    await terminator.terminate(150);
   });
 };
