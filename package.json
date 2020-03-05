@@ -4,55 +4,66 @@
     "name": "Gajus Kuizinas",
     "url": "http://gajus.com"
   },
-  "ava": {
-    "babel": {
-      "compileAsTests": [
-        "test/helpers/**/*"
-      ]
-    },
-    "files": [
-      "test/http-terminator/**/*"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ],
-    "require": [
-      "@babel/register"
-    ]
+    "rules": {
+      "subject-case": [
+        0,
+        "always",
+        "lowerCase"
+      ]
+    }
   },
-  "dependencies": {
-    "delay": "^4.3.0",
-    "roarr": "^2.14.6"
-  },
+  "contributors": [
+    {
+      "email": "stefan.issmer@droidsolutions.de",
+      "name": "Stefan Ißmer"
+    }
+  ],
   "description": "Gracefully terminates HTTP(S) server.",
   "devDependencies": {
-    "@ava/babel": "^1.0.0",
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/node": "^7.8.3",
-    "@babel/plugin-transform-flow-strip-types": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "@babel/register": "^7.8.3",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@types/chai": "^4.2.10",
+    "@types/chai-as-promised": "^7.1.2",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.7.7",
+    "@types/pem": "^1.9.5",
+    "@types/sinon": "^7.5.2",
+    "@typescript-eslint/eslint-plugin": "^2.22.0",
+    "@typescript-eslint/parser": "^2.22.0",
     "agentkeepalive": "^4.1.0",
-    "ava": "^3.0.0",
-    "babel-plugin-istanbul": "^6.0.0",
-    "babel-plugin-transform-export-default-name": "^2.0.4",
-    "coveralls": "^3.0.9",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^6.8.0",
-    "eslint-config-canonical": "^18.1.0",
-    "flow-bin": "^0.116.1",
-    "flow-copy-source": "^2.0.9",
-    "gitdown": "^3.1.2",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-mocha": "^6.3.0",
     "got": "^10.2.2",
     "husky": "^4.0.10",
+    "lint-staged": "^10.0.8",
+    "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "pem": "^1.14.3",
-    "semantic-release": "^16.0.2",
-    "sinon": "^8.1.0"
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^17.0.4",
+    "sinon": "^9.0.0",
+    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
   },
   "engines": {
     "node": ">=10"
   },
+  "files": [
+    "dist/*"
+  ],
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run test && npm run build"
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
     }
   },
   "keywords": [
@@ -60,33 +71,48 @@
     "prometheus"
   ],
   "license": "BSD-3-Clause",
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --ext ts,js"
+    ]
+  },
   "main": "./dist/index.js",
-  "name": "http-terminator",
+  "mocha": {
+    "extension": [
+      "ts"
+    ],
+    "recursive": true,
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ]
+  },
+  "name": "@droidsolutions/http-terminator",
   "nyc": {
     "all": true,
     "include": [
-      "src/**/*.js"
+      "src/*.ts",
+      "src/**/*.ts"
     ],
-    "instrument": false,
+    "extension": ".ts",
     "reporter": [
       "html",
       "text-summary"
     ],
-    "require": [
-      "@babel/register"
-    ],
-    "silent": true,
-    "sourceMap": false
+    "sourceMap": true
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gajus/http-terminator"
+    "url": "https://github.com/droidsolutions/http-terminator.git"
   },
   "scripts": {
-    "build": "rm -fr ./dist && NODE_ENV=production babel ./src --out-dir ./dist --copy-files --source-maps && flow-copy-source src dist",
-    "generate-readme": "gitdown ./.README/README.md --output-file ./README.md",
-    "lint": "eslint ./src ./test && flow",
-    "test": "NODE_ENV=test ava --verbose --serial"
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "lint": "eslint --ext ts,js .",
+    "test": "NODE_ENV=test NODE_TLS_REJECT_UNAUTHORIZED=0 mocha test/**/*.test.ts",
+    "coverage": "nyc npm run test"
   },
+  "types": "./dist/index.d.ts",
   "version": "1.0.0"
 }
