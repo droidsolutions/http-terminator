@@ -88,7 +88,7 @@
       "source-map-support/register"
     ]
   },
-  "name": "@droidsolutions/http-terminator",
+  "name": "@droidsolutions-oss/http-terminator",
   "nyc": {
     "all": true,
     "include": [
