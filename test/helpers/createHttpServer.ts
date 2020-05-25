@@ -43,7 +43,7 @@ export const createHttpServer = (requestHandler: RequestHandlerType): Promise<Ht
         return;
       }
       const port = (address as AddressInfo).port;
-      const url = "http://localhost:" + port;
+      const url = `http://localhost:${port}`;
 
       resolve({
         getConnections,

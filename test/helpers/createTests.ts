@@ -8,7 +8,7 @@ import { HttpServerFactoryType } from "./createHttpServer";
 import { HttpsServerFactoryType } from "./createHttpsServer";
 import { delay } from "./Delay";
 
-export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType) => {
+export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
   it("should terminate HTTP server with no connections", async function () {
     this.slow(400);
     const httpServer = await createHttpServer(() => {});
@@ -36,7 +36,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     chai.expect(spy.called).to.be.true;
 
-    terminator.terminate(150);
+    void terminator.terminate(150);
 
     await delay(100);
 
@@ -70,7 +70,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     await delay(50);
 
-    terminator.terminate(150);
+    void terminator.terminate(150);
 
     await delay(50);
 
@@ -98,7 +98,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     await delay(50);
 
-    terminator.terminate(150);
+    void terminator.terminate(150);
 
     const response = await request;
 
@@ -134,7 +134,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     const request0 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
     await delay(50);
 
-    terminator.terminate(150);
+    void terminator.terminate(150);
 
     const request1 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
 

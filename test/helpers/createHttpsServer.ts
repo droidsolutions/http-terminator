@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { createServer, Server } from "https";
 import { IncomingMessage, ServerResponse } from "http";
 import { createCertificate } from "pem";
@@ -17,6 +18,7 @@ type HttpsServerType = {
 export type HttpsServerFactoryType = (requestHandler: RequestHandlerType) => Promise<HttpsServerType>;
 
 export const createHttpsServer = async (requestHandler: RequestHandlerType): Promise<HttpsServerType> => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore Promisify of overloaded functions is difficult, see https://github.com/microsoft/TypeScript/issues/26048
   const { serviceKey, certificate, csr } = await promisify(createCertificate)({
     days: 1,
@@ -72,7 +74,7 @@ export const createHttpsServer = async (requestHandler: RequestHandlerType): Pro
       }
 
       const port = (address as AddressInfo).port;
-      const url = "https://localhost:" + port;
+      const url = `https://localhost:${port}`;
 
       resolve({
         getConnections,
