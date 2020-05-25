@@ -15,7 +15,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "prettier/@typescript-eslint",
   ],
-  ignorePatterns: ["coverage", "dist", "test/__test", "typings"],
+  ignorePatterns: ["coverage", "dist", "test/__test", "typings", ".eslintrc.js"],
   rules: {
     "comma-dangle": ["error", "always-multiline"],
     "dot-notation": ["error"],
@@ -23,7 +23,18 @@ module.exports = {
     "max-len": ["warn", { code: 120 }],
     "no-console": "error",
     "@typescript-eslint/ban-types": "error",
-    "@typescript-eslint/interface-name-prefix": ["warn", { prefixWithI: "never" }],
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        selector: "interface",
+        format: ["PascalCase"],
+        prefix: ["T"],
+        custom: {
+          regex: "^I[A-Z]",
+          match: false,
+        },
+      },
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
@@ -34,6 +45,7 @@ module.exports = {
       },
     ],
     "@typescript-eslint/quotes": ["warn", "double", { allowTemplateLiterals: true }],
+    "@typescript-eslint/no-unsafe-member-access": "off",
   },
   overrides: [
     {
