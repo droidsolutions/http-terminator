@@ -21,7 +21,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(httpServer.server.listening).to.be.false;
   });
 
-  it("should terminate hanging sockets after gracefulTerminattionTimeout", async function() {
+  it("should terminate hanging sockets after gracefulTerminationTimeout", async function() {
     this.slow(900);
 
     const spy = sinon.spy();
