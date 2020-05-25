@@ -1,15 +1,15 @@
-import sinon from "sinon";
-import got from "got";
-import { HttpServerFactoryType } from "./createHttpServer";
-import { HttpsServerFactoryType } from "./createHttpsServer";
-import { HttpTerminator } from "../../src/HttpTerminator";
 import chai from "chai";
-import { delay } from "./Delay";
+import got from "got";
 import { Agent, IncomingMessage, OutgoingMessage } from "http";
 import https from "https";
+import sinon from "sinon";
+import { HttpTerminator } from "../../src/HttpTerminator";
+import { HttpServerFactoryType } from "./createHttpServer";
+import { HttpsServerFactoryType } from "./createHttpsServer";
+import { delay } from "./Delay";
 
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType) => {
-  it("should terminate HTTP server with no connections", async function() {
+  it("should terminate HTTP server with no connections", async function () {
     this.slow(400);
     const httpServer = await createHttpServer(() => {});
 
@@ -21,7 +21,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(httpServer.server.listening).to.be.false;
   });
 
-  it("should terminate hanging sockets after gracefulTerminationTimeout", async function() {
+  it("should terminate hanging sockets after gracefulTerminationTimeout", async function () {
     this.slow(900);
 
     const spy = sinon.spy();
@@ -31,7 +31,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     });
 
     const terminator = new HttpTerminator(httpServer.server);
-    got(httpServer.url).catch((_) => {});
+    got(httpServer.url, { rejectUnauthorized: false }).catch((_) => {});
     await delay(50);
 
     chai.expect(spy.called).to.be.true;
@@ -48,7 +48,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     await chai.expect(httpServer.getConnections()).to.eventually.equal(0);
   });
 
-  it("server should stop accepting new connections after terminate is called", async function() {
+  it("server should stop accepting new connections after terminate is called", async function () {
     this.slow(500);
 
     const stub = sinon.stub();
@@ -66,7 +66,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const terminator = new HttpTerminator(httpServer.server);
 
-    const request0 = got(httpServer.url);
+    const request0 = got(httpServer.url, { rejectUnauthorized: false });
 
     await delay(50);
 
@@ -74,7 +74,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     await delay(50);
 
-    const request1 = got(httpServer.url, { retry: 0, timeout: { connect: 50 } });
+    const request1 = got(httpServer.url, { retry: 0, timeout: { connect: 50 }, rejectUnauthorized: false });
     await chai.expect(request1).to.be.rejected;
 
     const response0 = await request0;
@@ -82,7 +82,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(response0.body).to.equal("foo");
   });
 
-  it("ongoing requests should receive {connection: close} header", async function() {
+  it("ongoing requests should receive {connection: close} header", async function () {
     this.slow(300);
     const httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
       setTimeout(() => {
@@ -94,7 +94,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1, keepAliveMsecs: 10000 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1, keepAliveMsecs: 10000 });
 
-    const request = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
+    const request = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
 
     await delay(50);
 
@@ -107,7 +107,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
   });
 
   // eslint-disable-next-line max-len
-  it("ongoing requests should receive connection close header and new requests should reusing existing sockets", async function() {
+  it("ongoing requests should receive connection close header and new requests should reusing existing sockets", async function () {
     this.slow(600);
 
     const stub = sinon.stub();
@@ -131,12 +131,12 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1 });
 
-    const request0 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
+    const request0 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
     await delay(50);
 
     terminator.terminate(150);
 
-    const request1 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
+    const request1 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
 
     await delay(50);
 
@@ -151,7 +151,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(response1.body).to.equal("baz");
   });
 
-  it("should not send connection close header when server is not terminating", async function() {
+  it("should not send connection close header when server is not terminating", async function () {
     this.slow(400);
 
     const httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
@@ -164,13 +164,16 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1 });
 
-    const response = await got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent } });
+    const response = await got(httpServer.url, {
+      agent: { http: httpAgent, https: httpsAgent },
+      rejectUnauthorized: false,
+    });
 
     chai.expect(response.headers.connection).to.equal("keep-alive");
     await terminator.terminate(0);
   });
 
-  it("should clear the internal socket collections", async function() {
+  it("should clear the internal socket collections", async function () {
     this.slow(500);
 
     const httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
@@ -179,7 +182,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const terminator = new HttpTerminator(httpServer.server);
 
-    await got(httpServer.url);
+    await got(httpServer.url, { rejectUnauthorized: false });
     await delay(50);
 
     chai.expect(terminator["sockets"].size).to.equal(0);
