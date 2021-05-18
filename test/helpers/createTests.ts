@@ -8,6 +8,7 @@ import { HttpServerFactoryType } from "./createHttpServer";
 import { HttpsServerFactoryType } from "./createHttpsServer";
 import { delay } from "./Delay";
 
+// eslint-disable-next-line mocha/no-exports
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
   it("should terminate HTTP server with no connections", async function () {
     this.slow(400);
