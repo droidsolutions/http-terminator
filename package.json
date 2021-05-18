@@ -50,7 +50,7 @@
     "pem": "1.14.4",
     "prettier": "2.2.1",
     "rimraf": "^3.0.2",
-    "semantic-release": "17.4.2",
+    "semantic-release": "17.4.3",
     "sinon": "10.0.0",
     "source-map-support": "^0.5.19",
     "ts-node": "^9.1.1",
