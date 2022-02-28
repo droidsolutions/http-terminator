@@ -39,7 +39,7 @@
     "agentkeepalive": "4.2.1",
     "chai": "4.3.6",
     "chai-as-promised": "7.1.1",
-    "eslint": "8.9.0",
+    "eslint": "8.10.0",
     "eslint-config-prettier": "8.4.0",
     "eslint-plugin-mocha": "10.0.3",
     "got": "11.8.3",
