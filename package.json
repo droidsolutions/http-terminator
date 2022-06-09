@@ -44,7 +44,7 @@
     "eslint-plugin-mocha": "10.0.5",
     "got": "11.8.3",
     "husky": "8.0.1",
-    "lint-staged": "13.0.0",
+    "lint-staged": "13.0.1",
     "mocha": "10.0.0",
     "nyc": "15.1.0",
     "pem": "1.14.6",
