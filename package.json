@@ -33,7 +33,7 @@
     "@types/mocha": "9.1.1",
     "@types/node": "18.0.0",
     "@types/pem": "1.9.6",
-    "@types/sinon": "10.0.11",
+    "@types/sinon": "10.0.12",
     "@typescript-eslint/eslint-plugin": "5.29.0",
     "@typescript-eslint/parser": "5.29.0",
     "agentkeepalive": "4.2.1",
