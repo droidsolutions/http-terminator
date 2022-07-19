@@ -35,7 +35,7 @@
     "@types/pem": "1.9.6",
     "@types/sinon": "10.0.12",
     "@typescript-eslint/eslint-plugin": "5.30.7",
-    "@typescript-eslint/parser": "5.30.6",
+    "@typescript-eslint/parser": "5.30.7",
     "agentkeepalive": "4.2.1",
     "chai": "4.3.6",
     "chai-as-promised": "7.1.1",
