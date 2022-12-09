@@ -6,7 +6,7 @@ on:
 permissions:
   pull-requests: write
   contents: write
-  
+
 jobs:
   dependabot:
     runs-on: ubuntu-latest
@@ -18,14 +18,8 @@ jobs:
         uses: dependabot/fetch-metadata@v1.3.5
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Approve a PR
-        if: ${{ steps.metadata.outputs.dependency-type == 'direct:development' }}
-        run: gh pr review --approve "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Enable auto-merge for Dependabot PRs
-        if: ${{ steps.metadata.outputs.dependency-type == 'direct:development' && steps.metadata.outputs.update-type == 'version-update:semver-patch' }}
+        if: ${{ steps.metadata.outputs.dependency-type == 'direct:development' && steps.metadata.outputs.update-type != 'version-update:semver-major' }}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
