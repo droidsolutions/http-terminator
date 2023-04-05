@@ -47,7 +47,7 @@
     "lint-staged": "13.2.0",
     "mocha": "10.2.0",
     "nyc": "15.1.0",
-    "pem": "1.14.6",
+    "pem": "1.14.7",
     "prettier": "2.8.7",
     "rimraf": "4.4.1",
     "semantic-release": "21.0.1",
