@@ -34,7 +34,7 @@
     "@types/node": "20.3.0",
     "@types/pem": "1.9.6",
     "@types/sinon": "10.0.15",
-    "@typescript-eslint/eslint-plugin": "5.59.9",
+    "@typescript-eslint/eslint-plugin": "5.59.11",
     "@typescript-eslint/parser": "5.59.9",
     "agentkeepalive": "4.3.0",
     "chai": "4.3.7",
