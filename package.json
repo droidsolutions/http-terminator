@@ -36,7 +36,7 @@
     "@types/sinon": "10.0.16",
     "@typescript-eslint/eslint-plugin": "6.2.1",
     "@typescript-eslint/parser": "6.2.1",
-    "agentkeepalive": "4.3.0",
+    "agentkeepalive": "4.5.0",
     "chai": "4.3.7",
     "chai-as-promised": "7.1.1",
     "eslint": "8.46.0",
