@@ -49,7 +49,7 @@
     "nyc": "15.1.0",
     "pem": "1.14.8",
     "prettier": "3.0.3",
-    "rimraf": "5.0.4",
+    "rimraf": "5.0.5",
     "semantic-release": "22.0.5",
     "sinon": "16.0.0",
     "source-map-support": "0.5.21",
