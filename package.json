@@ -48,7 +48,7 @@
     "mocha": "10.2.0",
     "nyc": "15.1.0",
     "pem": "1.14.8",
-    "prettier": "3.0.3",
+    "prettier": "3.1.0",
     "rimraf": "5.0.5",
     "semantic-release": "22.0.7",
     "sinon": "17.0.1",
