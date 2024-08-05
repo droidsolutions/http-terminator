@@ -22,7 +22,6 @@ module.exports = {
     "max-classes-per-file": ["error", 1],
     "max-len": ["warn", { code: 120 }],
     "no-console": "error",
-    "@typescript-eslint/ban-types": "error",
     "@typescript-eslint/naming-convention": [
       "warn",
       {
@@ -44,7 +43,6 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
-    "@typescript-eslint/quotes": ["warn", "double", { allowTemplateLiterals: true }],
     "@typescript-eslint/no-unsafe-member-access": "off",
   },
   overrides: [
