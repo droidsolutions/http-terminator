@@ -14,11 +14,13 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     this.slow(400);
     const httpServer = await createHttpServer(() => {});
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     chai.expect(httpServer.server.listening).to.be.true;
 
     const terminator = new HttpTerminator(httpServer.server);
     await terminator.terminate();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     chai.expect(httpServer.server.listening).to.be.false;
   });
 
@@ -32,9 +34,10 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     });
 
     const terminator = new HttpTerminator(httpServer.server);
-    got(httpServer.url, { rejectUnauthorized: false }).catch((_) => {});
+    got(httpServer.url, { https: { rejectUnauthorized: false } }).catch((_) => {});
     await delay(50);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     chai.expect(spy.called).to.be.true;
 
     void terminator.terminate(150);
@@ -67,7 +70,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const terminator = new HttpTerminator(httpServer.server);
 
-    const request0 = got(httpServer.url, { rejectUnauthorized: false });
+    const request0 = got(httpServer.url, { https: { rejectUnauthorized: false } });
 
     await delay(50);
 
@@ -75,7 +78,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     await delay(50);
 
-    const request1 = got(httpServer.url, { retry: 0, timeout: { connect: 50 }, rejectUnauthorized: false });
+    const request1 = got(httpServer.url, { retry: 0, timeout: { connect: 50 }, https: { rejectUnauthorized: false } });
     await chai.expect(request1).to.be.rejected;
 
     const response0 = await request0;
@@ -95,7 +98,10 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1, keepAliveMsecs: 10000 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1, keepAliveMsecs: 10000 });
 
-    const request = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
+    const request = got(httpServer.url, {
+      agent: { http: httpAgent, https: httpsAgent },
+      https: { rejectUnauthorized: false },
+    });
 
     await delay(50);
 
@@ -132,12 +138,18 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1 });
     const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 1 });
 
-    const request0 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
+    const request0 = got(httpServer.url, {
+      agent: { http: httpAgent, https: httpsAgent },
+      https: { rejectUnauthorized: false },
+    });
     await delay(50);
 
     void terminator.terminate(150);
 
-    const request1 = got(httpServer.url, { agent: { http: httpAgent, https: httpsAgent }, rejectUnauthorized: false });
+    const request1 = got(httpServer.url, {
+      agent: { http: httpAgent, https: httpsAgent },
+      https: { rejectUnauthorized: false },
+    });
 
     await delay(50);
 
@@ -167,7 +179,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const response = await got(httpServer.url, {
       agent: { http: httpAgent, https: httpsAgent },
-      rejectUnauthorized: false,
+      https: { rejectUnauthorized: false },
     });
 
     chai.expect(response.headers.connection).to.equal("keep-alive");
@@ -183,7 +195,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const terminator = new HttpTerminator(httpServer.server);
 
-    await got(httpServer.url, { rejectUnauthorized: false });
+    await got(httpServer.url, { https: { rejectUnauthorized: false } });
     await delay(50);
 
     chai.expect(terminator["sockets"].size).to.equal(0);
