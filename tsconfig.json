@@ -22,5 +22,5 @@
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "exclude": ["test"]
+  "exclude": ["eslint.config.mjs", "test"]
 }

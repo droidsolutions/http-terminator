@@ -115,7 +115,7 @@ export class HttpTerminator {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const serverResponse: OutgoingMessage = (socket as any)._httpMessage;
+      const serverResponse: OutgoingMessage | undefined = (socket as any)._httpMessage;
 
       if (serverResponse) {
         this.setConnectionCloseHeader(serverResponse);
