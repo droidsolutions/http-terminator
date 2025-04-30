@@ -4,13 +4,13 @@ import { AddressInfo } from "net";
 
 type RequestHandlerType = (incomingMessage: IncomingMessage, outgoingMessage: ServerResponse) => void;
 
-type HttpServerType = {
+interface HttpServerType {
   getConnections: () => Promise<number>;
   port: number;
   server: Server;
   stop: () => Promise<void>;
   url: string;
-};
+}
 
 export type HttpServerFactoryType = (requestHandler: RequestHandlerType) => Promise<HttpServerType>;
 
@@ -43,7 +43,7 @@ export const createHttpServer = (requestHandler: RequestHandlerType): Promise<Ht
         return;
       }
       const port = (address as AddressInfo).port;
-      const url = `http://localhost:${port}`;
+      const url = `http://localhost:${port.toString()}`;
 
       resolve({
         getConnections,

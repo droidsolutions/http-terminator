@@ -7,13 +7,13 @@ import { AddressInfo } from "net";
 
 type RequestHandlerType = (incomingMessage: IncomingMessage, outgoingMessage: ServerResponse) => void;
 
-type HttpsServerType = {
+interface HttpsServerType {
   getConnections: () => Promise<number>;
   port: number;
   server: Server;
   stop: () => Promise<void>;
   url: string;
-};
+}
 
 export type HttpsServerFactoryType = (requestHandler: RequestHandlerType) => Promise<HttpsServerType>;
 
@@ -74,7 +74,7 @@ export const createHttpsServer = async (requestHandler: RequestHandlerType): Pro
       }
 
       const port = (address as AddressInfo).port;
-      const url = `https://localhost:${port}`;
+      const url = `https://localhost:${port.toString()}`;
 
       resolve({
         getConnections,

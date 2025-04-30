@@ -34,7 +34,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     });
 
     const terminator = new HttpTerminator(httpServer.server);
-    got(httpServer.url, { https: { rejectUnauthorized: false } }).catch((_) => {});
+    got(httpServer.url, { https: { rejectUnauthorized: false } }).catch((_: unknown) => {});
     await delay(50);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -113,7 +113,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(response.body).to.equal("foo");
   });
 
-  // eslint-disable-next-line max-len
+  // eslint-disable-next-line @stylistic/js/max-len
   it("ongoing requests should receive connection close header and new requests should reusing existing sockets", async function () {
     this.slow(600);
 
