@@ -4,7 +4,7 @@ import { AddressInfo } from "net";
 
 type RequestHandlerType = (incomingMessage: IncomingMessage, outgoingMessage: ServerResponse) => void;
 
-interface HttpServerType {
+export interface HttpServerType {
   getConnections: () => Promise<number>;
   port: number;
   server: Server;

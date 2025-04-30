@@ -4,15 +4,31 @@ import { Agent, IncomingMessage, OutgoingMessage } from "http";
 import https from "https";
 import sinon from "sinon";
 import { HttpTerminator } from "../../src/HttpTerminator";
-import { HttpServerFactoryType } from "./createHttpServer";
-import { HttpsServerFactoryType } from "./createHttpsServer";
+import { HttpServerFactoryType, HttpServerType } from "./createHttpServer";
+import { HttpsServerFactoryType, HttpsServerType } from "./createHttpsServer";
 import { delay } from "./Delay";
 
 // eslint-disable-next-line mocha/no-exports
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
+  let httpServer: HttpServerType | HttpsServerType | undefined;
+
+  // eslint-disable-next-line mocha/no-top-level-hooks
+  afterEach(async function () {
+    if (httpServer) {
+      try {
+        // Fallback cleanup to prevent never ending test run
+        await httpServer.stop();
+      } catch (_: unknown) {
+        // catch when the server was already stopped by the test
+      }
+
+      httpServer = undefined;
+    }
+  });
+
   it("should terminate HTTP server with no connections", async function () {
     this.slow(400);
-    const httpServer = await createHttpServer(() => {});
+    httpServer = await createHttpServer(() => {});
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     chai.expect(httpServer.server.listening).to.be.true;
@@ -29,7 +45,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     const spy = sinon.spy();
 
-    const httpServer = await createHttpServer(() => {
+    httpServer = await createHttpServer(() => {
       spy();
     });
 
@@ -66,7 +82,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
       outgoingMessage.end("bar");
     });
 
-    const httpServer = await createHttpServer(stub);
+    httpServer = await createHttpServer(stub);
 
     const terminator = new HttpTerminator(httpServer.server);
 
@@ -88,7 +104,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
   it("ongoing requests should receive {connection: close} header", async function () {
     this.slow(300);
-    const httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
+    httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
       setTimeout(() => {
         outgoingMessage.end("foo");
       }, 100);
@@ -132,7 +148,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
       }, 50);
     });
 
-    const httpServer = await createHttpServer(stub);
+    httpServer = await createHttpServer(stub);
 
     const terminator = new HttpTerminator(httpServer.server);
     const httpAgent = new Agent({ keepAlive: true, maxSockets: 1 });
@@ -167,7 +183,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
   it("should not send connection close header when server is not terminating", async function () {
     this.slow(400);
 
-    const httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
+    httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
       setTimeout(() => {
         outgoingMessage.end("foo");
       }, 50);
@@ -189,13 +205,14 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
   it("should clear the internal socket collections", async function () {
     this.slow(500);
 
-    const httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
+    httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
       outgoingMessage.end("foo");
     });
 
     const terminator = new HttpTerminator(httpServer.server);
 
-    await got(httpServer.url, { https: { rejectUnauthorized: false } });
+    const req = got(httpServer.url, { https: { rejectUnauthorized: false } });
+    req.cancel();
     await delay(50);
 
     chai.expect(terminator["sockets"].size).to.equal(0);
