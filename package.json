@@ -24,8 +24,8 @@
   ],
   "description": "Gracefully terminates HTTP(S) server.",
   "devDependencies": {
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
+    "@commitlint/cli": "20.0.0",
+    "@commitlint/config-conventional": "20.0.0",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@stylistic/eslint-plugin-js": "4.4.1",
