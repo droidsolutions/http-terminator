@@ -45,7 +45,7 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-mocha": "11.2.0",
     "globals": "16.4.0",
-    "got": "11.8.3",
+    "got": "14.5.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.4",
     "mocha": "11.7.4",
