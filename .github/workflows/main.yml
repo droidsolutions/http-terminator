@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run lint
 
   build:
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Use Node.js
         uses: actions/setup-node@v6
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run build
         env:
           CI: true
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Use Node.js
         uses: actions/setup-node@v6
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run coverage
 
   release:
@@ -68,7 +68,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
       - name: Download dist from build job
