@@ -10,7 +10,7 @@ import { delay } from "./Delay";
 
 // Retries would hide the behavior under test. A request retried after its socket was destroyed also fails
 // later with an uncaught error, which then breaks whichever test is running at that time.
-const got = baseGot.extend({ retry: 0 });
+const got = baseGot.extend({ retry: { limit: 0 } });
 
 // eslint-disable-next-line mocha/no-exports
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
@@ -119,7 +119,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
 
     await delay(50);
 
-    const request1 = got(httpServer.url, { retry: 0, timeout: { connect: 50 }, https: { rejectUnauthorized: false } });
+    const request1 = got(httpServer.url, { timeout: { connect: 50 }, https: { rejectUnauthorized: false } });
     await chai.expect(request1).to.be.rejected;
 
     const response0 = await request0;
