@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2019",
-    "module": "commonjs",
+    "module": "node20",
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     "declaration": true,
     "sourceMap": true,
@@ -19,7 +19,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "esModuleInterop": true
   },
   "exclude": ["eslint.config.mjs", "test"]
