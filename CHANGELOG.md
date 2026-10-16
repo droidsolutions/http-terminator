@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/droidsolutions/http-terminator/compare/v2.1.2...v2.1.3) (2026-10-16)
+
+
+### Bug Fixes
+
+* close the server as soon as in-flight requests complete ([3d1eca8](https://github.com/droidsolutions/http-terminator/commit/3d1eca8a052758a78390d55313c52fbc18c58f3e))
+
 ## [2.1.2](https://github.com/droidsolutions/http-terminator/compare/v2.1.1...v2.1.2) (2020-05-25)
 
 
