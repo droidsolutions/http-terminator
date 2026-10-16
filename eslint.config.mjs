@@ -1,6 +1,5 @@
 import js from "@eslint/js";
-import stylisticJs from "@stylistic/eslint-plugin-js";
-import stylisticTs from "@stylistic/eslint-plugin-ts";
+import stylistic from "@stylistic/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
 import mochaPlugin from "eslint-plugin-mocha";
@@ -16,7 +15,7 @@ export default tseslint.config(
   prettierConfig,
   mochaPlugin.configs.recommended,
   {
-    plugins: { "@stylistic/js": stylisticJs, "@stylistic/ts": stylisticTs },
+    plugins: { "@stylistic": stylistic },
 
     languageOptions: {
       ecmaVersion: 10,
@@ -31,9 +30,9 @@ export default tseslint.config(
       "max-classes-per-file": ["error", 1],
       "no-console": "error",
 
-      "@stylistic/js/comma-dangle": ["error", "always-multiline"],
-      "@stylistic/js/max-len": ["warn", { code: 120 }],
-      "@stylistic/ts/quotes": ["warn", "double", { allowTemplateLiterals: true, avoidEscape: true }],
+      "@stylistic/comma-dangle": ["error", "always-multiline"],
+      "@stylistic/max-len": ["warn", { code: 120 }],
+      "@stylistic/quotes": ["warn", "double", { allowTemplateLiterals: "always", avoidEscape: true }],
 
       "@typescript-eslint/naming-convention": [
         "warn",

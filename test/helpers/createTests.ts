@@ -154,7 +154,7 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     chai.expect(response.body).to.equal("foo");
   });
 
-  // eslint-disable-next-line @stylistic/js/max-len
+  // eslint-disable-next-line @stylistic/max-len
   it("ongoing requests should receive connection close header and new requests should reusing existing sockets", async function () {
     this.slow(600);
 
