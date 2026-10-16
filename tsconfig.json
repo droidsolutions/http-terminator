@@ -20,7 +20,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node16",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node"]
   },
-  "exclude": ["eslint.config.mjs", "test"]
+  "exclude": ["eslint.config.mjs", "test", "dist"]
 }

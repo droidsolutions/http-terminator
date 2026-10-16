@@ -2,7 +2,8 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDir": "../",
-    "outDir": "__test"
+    "outDir": "__test",
+    "types": ["mocha"]
   },
-  "exclude": ["__test"]
+  "exclude": ["__test"],
 }
