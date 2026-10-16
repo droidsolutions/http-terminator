@@ -210,9 +210,14 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     });
 
     const terminator = new HttpTerminator(httpServer.server);
+    // Since Node.js 19 the global agent uses keep-alive, which would keep the socket open after the request.
+    const httpAgent = new Agent({ keepAlive: false });
+    const httpsAgent = new https.Agent({ keepAlive: false });
 
-    const req = got(httpServer.url, { https: { rejectUnauthorized: false } });
-    req.cancel();
+    await got(httpServer.url, {
+      agent: { http: httpAgent, https: httpsAgent },
+      https: { rejectUnauthorized: false },
+    });
     await delay(50);
 
     chai.expect(terminator["sockets"].size).to.equal(0);
