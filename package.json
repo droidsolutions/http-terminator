@@ -129,7 +129,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "lint": "eslint --ext ts,js .",
-    "test": "NODE_ENV=test NODE_TLS_REJECT_UNAUTHORIZED=0 mocha test/**/*.test.ts",
+    "test": "NODE_ENV=test NODE_TLS_REJECT_UNAUTHORIZED=0 TS_NODE_PROJECT=test/tsconfig.json mocha test/**/*.test.ts",
     "coverage": "nyc npm run test"
   },
   "types": "./dist/index.d.ts",
