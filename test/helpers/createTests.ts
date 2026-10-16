@@ -16,7 +16,6 @@ const got = baseGot.extend({ retry: 0 });
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
   let httpServer: HttpServerType | HttpsServerType | undefined;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(async function () {
     if (httpServer) {
       try {

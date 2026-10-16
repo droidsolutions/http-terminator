@@ -11,12 +11,10 @@ describe("HttpTerminator", function() {
   });
 
   describe("http", function() {
-    // eslint-disable-next-line mocha/no-setup-in-describe
     createTests(createHttpServer);
   });
 
   describe("https", function() {
-    // eslint-disable-next-line mocha/no-setup-in-describe
     createTests(createHttpsServer);
   });
 });
