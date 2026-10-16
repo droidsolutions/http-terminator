@@ -1,5 +1,5 @@
 import chai from "chai";
-import got from "got";
+import baseGot from "got";
 import { Agent, IncomingMessage, OutgoingMessage } from "http";
 import https from "https";
 import sinon from "sinon";
@@ -7,6 +7,10 @@ import { HttpTerminator } from "../../src/HttpTerminator";
 import { HttpServerFactoryType, HttpServerType } from "./createHttpServer";
 import { HttpsServerFactoryType, HttpsServerType } from "./createHttpsServer";
 import { delay } from "./Delay";
+
+// Retries would hide the behavior under test. A request retried after its socket was destroyed also fails
+// later with an uncaught error, which then breaks whichever test is running at that time.
+const got = baseGot.extend({ retry: 0 });
 
 // eslint-disable-next-line mocha/no-exports
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
