@@ -1,5 +1,5 @@
 import chai from "chai";
-import got from "got";
+import baseGot from "got";
 import { Agent, IncomingMessage, OutgoingMessage } from "http";
 import https from "https";
 import sinon from "sinon";
@@ -7,6 +7,10 @@ import { HttpTerminator } from "../../src/HttpTerminator";
 import { HttpServerFactoryType, HttpServerType } from "./createHttpServer";
 import { HttpsServerFactoryType, HttpsServerType } from "./createHttpsServer";
 import { delay } from "./Delay";
+
+// Retries would hide the behavior under test. A request retried after its socket was destroyed also fails
+// later with an uncaught error, which then breaks whichever test is running at that time.
+const got = baseGot.extend({ retry: 0 });
 
 // eslint-disable-next-line mocha/no-exports
 export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServerFactoryType): void => {
@@ -66,6 +70,28 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     await delay(100);
 
     await chai.expect(httpServer.getConnections()).to.eventually.equal(0);
+  });
+
+  it("should not wait for gracefulTerminationTimeout when in-flight requests complete", async function () {
+    this.slow(500);
+
+    httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
+      setTimeout(() => {
+        outgoingMessage.end("foo");
+      }, 50);
+    });
+
+    const terminator = new HttpTerminator(httpServer.server);
+    const request = got(httpServer.url, { https: { rejectUnauthorized: false } });
+    await delay(25);
+
+    const start = Date.now();
+    await terminator.terminate(1000);
+    const duration = Date.now() - start;
+
+    const response = await request;
+    chai.expect(response.body).to.equal("foo");
+    chai.expect(duration).to.be.below(500);
   });
 
   it("server should stop accepting new connections after terminate is called", async function () {
@@ -210,9 +236,14 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     });
 
     const terminator = new HttpTerminator(httpServer.server);
+    // Since Node.js 19 the global agent uses keep-alive, which would keep the socket open after the request.
+    const httpAgent = new Agent({ keepAlive: false });
+    const httpsAgent = new https.Agent({ keepAlive: false });
 
-    const req = got(httpServer.url, { https: { rejectUnauthorized: false } });
-    req.cancel();
+    await got(httpServer.url, {
+      agent: { http: httpAgent, https: httpsAgent },
+      https: { rejectUnauthorized: false },
+    });
     await delay(50);
 
     chai.expect(terminator["sockets"].size).to.equal(0);

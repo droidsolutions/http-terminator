@@ -79,16 +79,15 @@ export class HttpTerminator {
     this.closeSockets(this.sockets);
     this.closeSockets(this.secureSockets);
 
-    if (this.sockets.size > 0 || this.secureSockets.size) {
-      // Wait the grace termination time before destroying the remaining sockets (those with existing requests).
-      await new Promise((resolve) => setTimeout(resolve, gracefulTerminationTimeout));
+    // Wait for existing requests to complete, but no longer than the grace termination time.
+    await this.waitForSocketsToClose(gracefulTerminationTimeout);
 
-      for (const socket of this.sockets) {
-        socket.destroy();
-      }
-      for (const secureSocket of this.secureSockets) {
-        secureSocket.destroy();
-      }
+    // Destroy the remaining sockets (those with requests that did not complete in time).
+    for (const socket of this.sockets) {
+      socket.destroy();
+    }
+    for (const secureSocket of this.secureSockets) {
+      secureSocket.destroy();
     }
 
     // Tell the server to stop accepting new requests.
@@ -101,6 +100,18 @@ export class HttpTerminator {
     });
 
     return this.terminating;
+  }
+
+  /**
+   * Resolves as soon as all sockets are closed or the given timeout has passed, whichever comes first.
+   * @param timeout A time in milliseconds to wait at most.
+   */
+  private async waitForSocketsToClose(timeout: number): Promise<void> {
+    const deadline = Date.now() + timeout;
+
+    while ((this.sockets.size > 0 || this.secureSockets.size > 0) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    }
   }
 
   /**
@@ -144,10 +155,11 @@ export class HttpTerminator {
   private destroySocket(socket: Socket | TLSSocket): void {
     socket.destroy();
 
-    if (socket instanceof Socket) {
-      this.sockets.delete(socket);
-    } else {
+    // TLSSocket extends Socket, so it has to be checked first.
+    if (socket instanceof TLSSocket) {
       this.secureSockets.delete(socket);
+    } else {
+      this.sockets.delete(socket);
     }
   }
 }
