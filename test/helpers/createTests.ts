@@ -68,6 +68,28 @@ export const createTests = (createHttpServer: HttpServerFactoryType | HttpsServe
     await chai.expect(httpServer.getConnections()).to.eventually.equal(0);
   });
 
+  it("should not wait for gracefulTerminationTimeout when in-flight requests complete", async function () {
+    this.slow(500);
+
+    httpServer = await createHttpServer((_: IncomingMessage, outgoingMessage: OutgoingMessage) => {
+      setTimeout(() => {
+        outgoingMessage.end("foo");
+      }, 50);
+    });
+
+    const terminator = new HttpTerminator(httpServer.server);
+    const request = got(httpServer.url, { https: { rejectUnauthorized: false } });
+    await delay(25);
+
+    const start = Date.now();
+    await terminator.terminate(1000);
+    const duration = Date.now() - start;
+
+    const response = await request;
+    chai.expect(response.body).to.equal("foo");
+    chai.expect(duration).to.be.below(500);
+  });
+
   it("server should stop accepting new connections after terminate is called", async function () {
     this.slow(500);
 
