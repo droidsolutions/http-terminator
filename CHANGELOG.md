@@ -1,3 +1,10 @@
+## [2.1.4](https://github.com/droidsolutions/http-terminator/compare/v2.1.3...v2.1.4) (2026-10-19)
+
+
+### Bug Fixes
+
+* publish the build output again ([d892e69](https://github.com/droidsolutions/http-terminator/commit/d892e6978760887000bada6b2355cb3e3d923399))
+
 ## [2.1.3](https://github.com/droidsolutions/http-terminator/compare/v2.1.2...v2.1.3) (2026-10-16)
 
 

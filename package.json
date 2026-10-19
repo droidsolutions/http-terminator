@@ -133,5 +133,5 @@
     "coverage": "nyc npm run test"
   },
   "types": "./dist/index.d.ts",
-  "version": "2.1.3"
+  "version": "2.1.4"
 }
