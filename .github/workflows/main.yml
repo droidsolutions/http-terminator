@@ -79,6 +79,9 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: dist
+          path: dist
+      - name: Verify the package contains the build output
+        run: npm pack --dry-run --json | node -e 'const [p] = JSON.parse(require("fs").readFileSync(0)); if (!p.files.some((f) => f.path === "dist/index.js")) { console.error("dist/index.js is missing from the package"); process.exit(1); }'
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
